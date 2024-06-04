@@ -1,7 +1,7 @@
 return {
   "neovim/nvim-lspconfig",
   dependencies = {
-    "williambomam/mason.nvim",
+    "williamboman/mason.nvim",
     "folke/neodev.nvim",
   },
   config = function()
@@ -26,17 +26,18 @@ return {
       vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
       vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
       vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
-      vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
       vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-      vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
       vim.keymap.set('n', '<space>f', function()
         vim.lsp.buf.format { async = true }
       end, opts)
     end
+
     require("lspconfig").cssls.setup{
       on_attach = on_attach,
     }
+
     require("neodev").setup()
+
     require("lspconfig").lua_ls.setup({
       on_attach = on_attach,
       settings = {
@@ -46,8 +47,13 @@ return {
         }
       }
     })
+
     require("lspconfig").clangd.setup{
-      on_attach = on_attach,
+      on_attach = function(client, bufnr)
+        on_attach(client, bufnr)
+        -- Esta clave solo se aplica a los buffers donde clangd está activo
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-b>', ':lua print("Hola caracola")<CR>', { noremap = true, silent = true })
+      end,
     }
   end
 }
