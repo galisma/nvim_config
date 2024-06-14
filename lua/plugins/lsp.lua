@@ -48,12 +48,8 @@ return {
       }
     })
 
-    require("lspconfig").clangd.setup{
-      on_attach = function(client, bufnr)
-        on_attach(client, bufnr)
-        -- Esta clave solo se aplica a los buffers donde clangd está activo
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-b>', ':lua print("Hola caracola")<CR>', { noremap = true, silent = true })
-      end,
-    }
+    require("lspconfig").bashls.setup{}
+    require("lspconfig").clangd.setup{}
+    require("lspconfig").asm_lsp.setup{}
   end
 }
